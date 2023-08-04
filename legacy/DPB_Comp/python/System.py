@@ -226,8 +226,7 @@ class System:
         all_base_stations_schedule = []
         for base_station in self.base_stations_list:
             slot_schedule = base_station.request_next_schedule_to_scheduler()
-            all_base_stations_schedule.append(
-                slot_schedule)  # Use append instead of extend
+            all_base_stations_schedule.append(slot_schedule)
         return all_base_stations_schedule
 
     def inform_base_stations_links(self):
@@ -246,14 +245,6 @@ class System:
             base_station)
         self.add_links_to_base_station_list(
             base_station, links_to_base_station_list)
-
-    def calculate_aggregate_capacity(self):
-        self.update_all_user_equipment_rx_signal_to_interference_plus_noise_ratio()
-        self.update_all_user_equipment_reception_capacity()
-        aggregate_capacity = 0
-        for user_equipment in self.user_equipment_list:
-            aggregate_capacity += user_equipment.current_capacity_in_bits_per_second
-        return aggregate_capacity
 
     def update_all_user_equipment_rx_signal_to_interference_plus_noise_ratio(self):
         for user_equipment in self.user_equipment_list:

@@ -17,7 +17,7 @@ class TestUserEquipment(unittest.TestCase):
         self.assertEqual(ue.y, 2)
         self.assertEqual(ue.frequency, 700e6)
         self.assertEqual(ue.unique_id, "unique_id_1")
-        self.assertIsNone(ue.connected_bs)
+        self.assertIsNone(ue.connected_base_station)
         self.assertIsNone(ue.distance_from_bs)
         self.assertIsNone(ue.link_capacity)
         self.assertIsNone(ue.serving_base_station)
@@ -25,12 +25,12 @@ class TestUserEquipment(unittest.TestCase):
     def test_user_equipment_setters(self):
         ue = self.user_equipment
 
-        ue.connected_bs = "BaseStation_1"
+        ue.connected_base_station = "BaseStation_1"
         ue.distance_from_bs = 100
         ue.link_capacity = 1e6
         ue.serving_base_station = "BaseStation_1"
 
-        self.assertEqual(ue.connected_bs, "BaseStation_1")
+        self.assertEqual(ue.connected_base_station, "BaseStation_1")
         self.assertEqual(ue.distance_from_bs, 100)
         self.assertEqual(ue.link_capacity, 1e6)
         self.assertEqual(ue.serving_base_station, "BaseStation_1")

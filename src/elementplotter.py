@@ -3,10 +3,19 @@ import plotly.express as px
 
 
 class ElementPlotter:
-
     def __init__(self, base_stations, user_equipments):
         self._base_stations = base_stations
         self._user_equipments = user_equipments
+
+    def _max_x(self):
+        bs_x = max(bs.x for bs in self._base_stations)
+        ue_x = max(ue.x for ue in self._user_equipments)
+        return max(bs_x, ue_x)
+
+    def _max_y(self):
+        bs_y = max(bs.y for bs in self._base_stations)
+        ue_y = max(ue.y for ue in self._user_equipments)
+        return max(bs_y, ue_y)
 
     def plot_elements(self):
         bs_coordinates = [bs.coordinates for bs in self._base_stations]
@@ -26,15 +35,14 @@ class ElementPlotter:
 
         df["size"] = [30 if marker_type == 'bs' else (5 if marker_type == 'ue' else 0) for marker_type in df['Type']]
 
-
         fig = px.scatter(df,
                          x="x",
                          y="y",
                          color="Type",
                          symbol="Type",
                          symbol_sequence=["triangle-up", "circle"],
-                         range_x=(0, 20),
-                         range_y=(0, 10),
+                         range_x=(-10, (self._max_x()) + 10),
+                         range_y=(-10, (self._max_y()+ 10)),
                          size="size",
                          size_max=30)
 

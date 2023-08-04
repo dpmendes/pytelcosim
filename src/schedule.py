@@ -1,6 +1,3 @@
-from src.userequipment import UserEquipment
-
-
 class Schedule:
     def __init__(self, number_of_resource_blocks):
         self._base_station = None
@@ -10,10 +7,6 @@ class Schedule:
     def add_user_to_resource_block(self, user_equipment):
         if len(self._users_in_resource_blocks) < self._number_of_resource_blocks:
             self._users_in_resource_blocks.append(user_equipment)
-
-    def shift_users_in_resource_blocks_to_the_right(self):
-        dummy_user = UserEquipment.create_dummy_user()
-        self._users_in_resource_blocks.insert(0, dummy_user)
 
     def get_user_in_resource_block(self, resource_block):
         if 0 <= resource_block < len(self._users_in_resource_blocks):

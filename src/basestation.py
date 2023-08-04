@@ -1,10 +1,10 @@
-from src.element import Element
-from src.roundrobinscheduler import RoundRobinScheduler
+from element import Element
+from roundrobinscheduler import RoundRobinScheduler
 
 
 class BaseStation(Element):
 
-    def __init__(self, x, y, frequency, unique_id):
+    def __init__(self, x, y, frequency=None, unique_id=None):
         super().__init__(x, y, frequency, unique_id)
         self._number_of_resource_blocks_per_slot = 0
         self._scheduler = None
@@ -45,7 +45,7 @@ class BaseStation(Element):
         return self._outgoing_links
 
     @outgoing_links.setter
-    def outgoing_link(self, outgoing_link):
+    def outgoing_links(self, outgoing_link):
         if outgoing_link not in self._outgoing_links:
             self._outgoing_links.append(outgoing_link)
 
@@ -58,7 +58,7 @@ class BaseStation(Element):
         return self._incoming_links
 
     @incoming_links.setter
-    def incoming_link(self, incoming_link):
+    def incoming_links(self, incoming_link):
         if incoming_link not in self._incoming_links:
             self._incoming_links.append(incoming_link)
 
@@ -89,8 +89,7 @@ class BaseStation(Element):
     def request_next_schedule_to_scheduler(self):
         base_station_scheduler = self._scheduler
         number_of_resource_blocks = self.number_of_resource_blocks_per_slot
-        base_station_scheduler.set_number_of_resource_blocks_per_slot(
-            number_of_resource_blocks)
+        base_station_scheduler.set_number_of_resource_blocks_per_slot(number_of_resource_blocks)
         slot_schedule = base_station_scheduler.schedule_next_slot()
         self.update_times_served()
         return slot_schedule
@@ -100,13 +99,7 @@ class BaseStation(Element):
         self._user_equipment_times_scheduled = scheduler.get_resource_blocks_served_per_user_equipment_list()
 
     def initialize_round_robin_scheduler(self):
-        self._scheduler = RoundRobinScheduler(
-            self.number_of_resource_blocks_per_slot)
-
-    def find_minimum_user_equipment_number_of_times_served(self):
-        minimum_user_equipment_number_of_times_served = min(
-            self._user_equipment_times_scheduled)
-        return minimum_user_equipment_number_of_times_served
+        self._scheduler = RoundRobinScheduler(self.number_of_resource_blocks_per_slot)
 
     def __str__(self) -> str:
         return f"BaseStation: ID={self._unique_id}, Location=({self._x:.2f},{self._y:.2f}), Frequency={self._frequency:.2f}"
