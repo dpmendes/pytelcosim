@@ -20,7 +20,8 @@ class Element:
 
         self._x = x
         self._y = y
-        self._bandwidth = bandwidth
+        # self._bandwidth = bandwidth
+        self._bandwidth = 180e3
         self._current_capacity_in_bits_per_second = 0
         self._current_signal_to_interference_plus_noise_ratio = 0
         self._frequency = frequency
@@ -29,7 +30,8 @@ class Element:
         self._receiver_temperature_in_kelvins = 290
         self._total_bits_received = 0
         self._total_bits_transmitted = 0
-        self._transmisson_power = transmisson_power
+        # self._transmisson_power = transmisson_power
+        self._transmisson_power = 40
         self._slot_duration_in_seconds = 0.5e-3
         self._unique_id = unique_id if unique_id is not None else uuid.uuid4()
 
@@ -55,10 +57,6 @@ class Element:
     def coordinates(self):
         """A tuple containing the x and y coordinates of the element."""
         return (self._x, self._y)
-
-    @coordinates.setter
-    def coordinates(self, xy):
-        self._x, self._y = xy
 
     @property
     def frequency(self):
@@ -162,24 +160,25 @@ class Element:
 
     def receive_resource_block(self):
         """Increment the number of received resource blocks and update the total bits received."""
-        C = self.current_capacity_in_bits_per_second
-        Tslot = self.slot_duration_in_seconds
+        C = self._current_capacity_in_bits_per_second
+        Tslot = self._slot_duration_in_seconds
         self.total_bits_received += (C * Tslot)
-        self.number_of_resource_blocks_received += 1
+        self._number_of_resource_blocks_received += 1
 
     def transmit_resource_block(self, capacity):
         """Update the total bits transmitted."""
-        self.total_bits_transmitted += capacity * self.slot_duration_in_seconds
+        if capacity < 0:
+            raise ValueError("Capacity must be a positive number.")
+        self._total_bits_transmitted += capacity * self._slot_duration_in_seconds
 
     def update_signal_to_interference_plus_noise_ratio(self, intended_signal_power, interfering_signal_power):
         """Update the current signal-to-interference-plus-noise ratio (SINR)."""
         try:
             noise_power = self.calculate_noise_power()
-            SINR = intended_signal_power / \
-                (interfering_signal_power + noise_power)
-            self.current_signal_to_interference_plus_noise_ratio = SINR
+            SINR = intended_signal_power / (interfering_signal_power + noise_power)
+            self._current_signal_to_interference_plus_noise_ratio = SINR
         except ZeroDivisionError:
-            self.current_signal_to_interference_plus_noise_ratio = float('inf')
+            self._current_signal_to_interference_plus_noise_ratio = float('inf')
 
     def calculate_reception_capacity(self):
         """Calculate and update the reception capacity based on the current SINR."""
@@ -195,10 +194,7 @@ class Element:
     def calculate_noise_power(self):
         """Calculate the noise power based on the Boltzmann constant, temperature, and bandwidth."""
         k = self.BOLTZMANN_CONSTANT
-        T = self.receiver_temperature_in_kelvins
+        T = self._receiver_temperature_in_kelvins
         BW = self._bandwidth
         noise_power = k * T * BW
         return noise_power
-
-    def __str__(self) -> str:
-        return f"Element: Coordinates=({self.x:.6f}, {self.y:.6f}), Frequency={self.frequency}, Bandwidth={self.bandwidth}"

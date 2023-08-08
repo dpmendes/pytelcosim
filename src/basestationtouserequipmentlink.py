@@ -1,4 +1,4 @@
-from src.link import Link
+from link import Link
 
 
 class BaseStationToUserEquipmentLink(Link):

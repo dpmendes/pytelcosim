@@ -1,5 +1,5 @@
-from src.schedule import Schedule
-from src.scheduler import Scheduler
+from schedule import Schedule
+from scheduler import Scheduler
 
 
 class RoundRobinScheduler(Scheduler):

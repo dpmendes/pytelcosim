@@ -1,5 +1,5 @@
-from src.userequipment import UserEquipment
-from src.userequipmentcreator import UserEquipmentCreator
+from userequipmentcreator import UserEquipmentCreator
+
 
 
 class UserEquipmentManager:
@@ -12,39 +12,34 @@ class UserEquipmentManager:
         if not self.find_user_equipment(user_equipment):
             self._user_equipments.append(user_equipment)
 
+    def create_user_equipments(self, mode='FIXED', fixed_x=None, fixed_y=None, number_of_ues=None, default_frequency=None, unique_id=None):
+        user_equipment_creator = UserEquipmentCreator(
+            fixed_x, fixed_y)
+
+        for _ in range(number_of_ues):
+            if mode == 'FIXED':
+                if fixed_x is None or fixed_y is None:
+                    raise ValueError("Upper x and y bounds must be provided for 'FIXED' mode.")
+                user_equipment = user_equipment_creator.create_fixed_user_equipment(
+                    fixed_x, fixed_y, default_frequency, unique_id)
+            elif mode == 'RANDOM':
+                user_equipment = user_equipment_creator.create_random_user_equipment(default_frequency, unique_id)
+            else:
+                raise ValueError(f"Invalid mode '{mode}'. Must be 'FIXED' or 'RANDOM'.")
+
+            self.add_user_equipment(user_equipment)
+
     def find_user_equipment(self, user_equipment):
         return user_equipment in self._user_equipments
-
-    def update_all_user_equipment_rx_signal_to_interference_plus_noise_ratio(self):
-        for user_equipment in self._user_equipments:
-            links_to_user_equipment = self.find_links_to_user_equipment(
-                user_equipment)
-            intended_signal = self.calculate_intended_signal_to_user_equipment(
-                user_equipment, links_to_user_equipment)
-            interfering_signal = self.calculate_interfering_signal_at_user_equipment(
-                user_equipment, links_to_user_equipment)
-            user_equipment.update_signal_to_interference_plus_noise_ratio(
-                intended_signal, interfering_signal)
 
     def update_all_user_equipment_reception_capacity(self):
         for user_equipment in self._user_equipments:
             user_equipment.calculate_reception_capacity()
 
-    def update_all_user_equipment_slot_duration(self):
+    def update_all_user_equipment_slot_duration(self, slot_duration_in_seconds):
+        self._slot_duration_in_seconds = slot_duration_in_seconds
         for user_equipment in self._user_equipments:
             user_equipment.slot_duration_in_seconds = self._slot_duration_in_seconds
-
-    def create_user_equipments(self, upper_x_bound, upper_y_bound, number_of_ues, default_frequency=None, unique_id=None):
-
-        user_equipment_creator = UserEquipmentCreator(
-            upper_x_bound, upper_y_bound,)
-
-        for _ in range(number_of_ues):
-            user_equipment = user_equipment_creator.create_user_equipment(
-                default_frequency, unique_id)
-            self._user_equipments.append(user_equipment)
-
-        return self._user_equipments
 
     def clear_user_equipments(self):
         self._user_equipments = []
