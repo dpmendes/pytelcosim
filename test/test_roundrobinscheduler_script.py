@@ -1,6 +1,6 @@
 import unittest
-from src.roundrobinscheduler import RoundRobinScheduler
-from src.userequipment import UserEquipment
+from scheduler.round_robin_scheduler import RoundRobinScheduler
+from transceiver.user_equipment.user_equipment import UserEquipment
 
 class TestRoundRobinScheduler(unittest.TestCase):
 

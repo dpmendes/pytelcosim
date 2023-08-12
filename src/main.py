@@ -1,7 +1,7 @@
 import datetime
 import time
 
-from monitor import Monitor
+from system.monitor import Monitor
 from system import System
 
 

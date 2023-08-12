@@ -1,5 +1,5 @@
 import math
-from userequipment import UserEquipment
+from transceiver.user_equipment.user_equipment import UserEquipment
 
 class Link:
 

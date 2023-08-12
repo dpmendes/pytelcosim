@@ -1,6 +1,6 @@
 import unittest
-from src.basestation import BaseStation
-from src.basestationcreator import BaseStationCreator
+from transceiver.base_station import BaseStation
+from transceiver.base_station.base_station_creator import BaseStationCreator
 
 
 class TestBaseStationCreator(unittest.TestCase):

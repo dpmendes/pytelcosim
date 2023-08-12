@@ -1,6 +1,6 @@
-from basestationmanager import BaseStationManager
+from transceiver.base_station.base_station_manager import BaseStationManager
 from linkmanager import LinkManager
-from userequipmentmanager import UserEquipmentManager
+from transceiver.user_equipment.user_equipment_manager import UserEquipmentManager
 from signalcalculator import SignalCalculator
 
 

@@ -1,5 +1,5 @@
-from basestationtouserequipmentlink import BaseStationToUserEquipmentLink
-from userequipmenttobasestationlink import UserEquipmentToBaseStationLink
+from transceiver.base_station.base_station_to_user_equipment_link import BaseStationToUserEquipmentLink
+from transceiver.user_equipment.user_equipment_to_base_station_link import UserEquipmentToBaseStationLink
 
 
 class LinkManager:
