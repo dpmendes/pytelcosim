@@ -1,5 +1,5 @@
-from element import Element
-from scheduler.round_robin_scheduler import RoundRobinScheduler
+from transceiver.base.element import Element
+from scheduler.round_robin.round_robin_scheduler import RoundRobinScheduler
 
 
 class BaseStation(Element):

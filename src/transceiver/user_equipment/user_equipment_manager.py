@@ -1,5 +1,4 @@
-from user_equipment_creator import UserEquipmentCreator
-
+from transceiver.user_equipment.user_equipment_creator import UserEquipmentCreator
 
 
 class UserEquipmentManager:
@@ -12,7 +11,8 @@ class UserEquipmentManager:
         if not self.find_user_equipment(user_equipment):
             self._user_equipments.append(user_equipment)
 
-    def create_user_equipments(self, mode='FIXED', fixed_x=None, fixed_y=None, number_of_ues=None, default_frequency=None, unique_id=None):
+    def create_user_equipments(self, mode='FIXED', fixed_x=None, fixed_y=None, number_of_ues=None,
+                               default_frequency=None, unique_id=None):
         user_equipment_creator = UserEquipmentCreator(
             fixed_x, fixed_y)
 

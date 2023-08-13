@@ -1,5 +1,5 @@
-from elementcreator import ElementCreator
-from user_equipment import UserEquipment
+from transceiver.base.element_creator import ElementCreator
+from transceiver.user_equipment.user_equipment import UserEquipment
 
 
 class UserEquipmentCreator(ElementCreator):

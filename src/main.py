@@ -1,8 +1,8 @@
 import datetime
 import time
 
-from system.monitor import Monitor
-from system import System
+from system.monitor.monitor import Monitor
+from system.system import System
 
 
 def main():

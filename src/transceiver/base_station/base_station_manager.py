@@ -1,5 +1,4 @@
-from base_station_creator import BaseStationCreator
-
+from transceiver.base_station.base_station_creator import BaseStationCreator
 
 class BaseStationManager:
 

@@ -1,7 +1,7 @@
 from transceiver.base_station.base_station_manager import BaseStationManager
-from capacitycalculator import CapacityCalculator
-from freespacechannel import FreeSpaceChannel
-from linkmanager import LinkManager
+from scheduler.round_robin.capacity_calculator import CapacityCalculator
+from channel.free_space_channel import FreeSpaceChannel
+from link.link_manager import LinkManager
 from transceiver.user_equipment.user_equipment_manager import UserEquipmentManager
 
 

@@ -1,5 +1,5 @@
-from base_station import BaseStation
-from elementcreator import ElementCreator
+from transceiver.base_station.base_station import BaseStation
+from transceiver.base.element_creator import ElementCreator
 
 
 class BaseStationCreator(ElementCreator):

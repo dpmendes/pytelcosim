@@ -1,7 +1,7 @@
 from transceiver.base_station.base_station_manager import BaseStationManager
-from linkmanager import LinkManager
+from link.link_manager import LinkManager
 from transceiver.user_equipment.user_equipment_manager import UserEquipmentManager
-from signalcalculator import SignalCalculator
+from transmission_calc.signal_calculator import SignalCalculator
 
 
 class CapacityCalculator:
