@@ -25,7 +25,7 @@ class Monitor(ElementPlotter):
 
     def create_log_directory(self, log_name, log_directory='.'):
         """Function to create a log directory if it doesn't exist and return the log file path."""
-        log_directory = os.path.join(log_directory, 'logs')
+        log_directory = os.path.join(log_directory, 'execution logs')
         os.makedirs(log_directory, exist_ok=True)
         return os.path.join(log_directory, f'{log_name}.txt')
 
