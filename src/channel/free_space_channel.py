@@ -1,5 +1,7 @@
 import math
+
 import numpy as np
+
 from channel.base.channel import Channel
 
 

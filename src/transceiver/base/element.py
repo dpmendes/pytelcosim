@@ -1,5 +1,7 @@
-import numpy as np
 import uuid
+
+import numpy as np
+
 
 class Element:
     """A class that represents an element for wireless communication."""

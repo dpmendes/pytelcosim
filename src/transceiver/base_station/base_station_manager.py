@@ -1,5 +1,6 @@
 from transceiver.base_station.base_station_creator import BaseStationCreator
 
+
 class BaseStationManager:
 
     def __init__(self, slot_duration_in_seconds, resource_blocks_per_slot):

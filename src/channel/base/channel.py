@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class Channel(ABC):
-
     SPEED_OF_LIGHT_IN_METERS_PER_SECOND = 3e8
 
     def __init__(self, frequency_in_hertz: float):

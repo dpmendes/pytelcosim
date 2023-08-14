@@ -1,13 +1,15 @@
 import os
 
-from system.monitor.elementplotter import ElementPlotter
+from system.monitor.element_plotter import ElementPlotter
 from system.monitor.logger import Logger
 from system.system import System
+
 
 class Monitor(ElementPlotter):
     """
     This class is responsible for monitoring system entities including base stations and user equipment.
     """
+
     def __init__(self, system: System, log_name: str, print_to_console: bool = False):
         self._base_stations = system.base_stations
         self._user_equipments = system.user_equipments
@@ -26,7 +28,6 @@ class Monitor(ElementPlotter):
         log_directory = os.path.join(log_directory, 'logs')
         os.makedirs(log_directory, exist_ok=True)
         return os.path.join(log_directory, f'{log_name}.txt')
-
 
     def _print_to_console(self, string):
         if self._print_to_console_flag:
@@ -112,7 +113,7 @@ class Monitor(ElementPlotter):
             user_equipment = link.destination_node
             base_station = link.source_node
             xu, yu = user_equipment.x, user_equipment.y
-            xb, yb = base_station.x , base_station.y
+            xb, yb = base_station.x, base_station.y
             gain = link.gain
             log_string = f"Link Number {link_counter}: From BS ({xb},{yb}) to UE ({xu},{yu}), Gain = {gain:e}"
             self._system_logger.info(log_string)

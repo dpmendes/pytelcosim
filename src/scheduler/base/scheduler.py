@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class Scheduler(ABC):
     def __init__(self, number_of_resource_blocks_per_slot):
         self.number_of_resource_blocks_per_slot = number_of_resource_blocks_per_slot

@@ -1,5 +1,5 @@
-from transceiver.base.element import Element
 from scheduler.round_robin.round_robin_scheduler import RoundRobinScheduler
+from transceiver.base.element import Element
 
 
 class BaseStation(Element):
@@ -78,7 +78,7 @@ class BaseStation(Element):
         number_of_connected_user_equipment = len(
             self._connected_user_equipment)
         self._user_equipment_times_scheduled = [
-            0] * number_of_connected_user_equipment
+                                                   0] * number_of_connected_user_equipment
 
     def inform_connected_user_equipment_to_scheduler(self):
         base_station_scheduler = self._scheduler

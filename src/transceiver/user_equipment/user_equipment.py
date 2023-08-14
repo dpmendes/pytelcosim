@@ -1,7 +1,6 @@
 from transceiver.base.element import Element
 
 
-
 class UserEquipment(Element):
     """Represents a user equipment in a network."""
 

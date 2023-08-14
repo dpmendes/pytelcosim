@@ -1,5 +1,7 @@
 import math
+
 from transceiver.user_equipment.user_equipment import UserEquipment
+
 
 class Link:
 
@@ -13,7 +15,7 @@ class Link:
 
     def calculate_distance(self):
         origin_x, origin_y = self._source_node.x, self._source_node.y
-        destination_x, destination_y = self._destination_node.x , self._destination_node.y
+        destination_x, destination_y = self._destination_node.x, self._destination_node.y
 
         horizontal_distance = destination_x - origin_x
         vertical_distance = destination_y - origin_y
@@ -35,7 +37,7 @@ class Link:
         l = self.calculate_distance()
         N0 = 290 * 1.38064852e-23
         a = 2
-        snr = (J/((l**a)*N0*W))
+        snr = (J / ((l ** a) * N0 * W))
         if snr <= 0:
             self._capacity = 0
         else:
