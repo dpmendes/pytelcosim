@@ -1,5 +1,5 @@
-from transceiver.base_station.base_station_manager import BaseStationManager
 from link.link_manager import LinkManager
+from transceiver.base_station.base_station_manager import BaseStationManager
 from transceiver.user_equipment.user_equipment_manager import UserEquipmentManager
 from transmission_calc.signal_calculator import SignalCalculator
 
@@ -25,8 +25,10 @@ class CapacityCalculator:
         self._aggregate_throughput = 0
 
     def _calculate_signals(self, user_equipment, links_to_user_equipment):
-        intended_signal = SignalCalculator.calculate_intended_signal_to_user_equipment(user_equipment, links_to_user_equipment)
-        interfering_signal = SignalCalculator.calculate_interfering_signal_at_user_equipment(user_equipment, links_to_user_equipment)
+        intended_signal = SignalCalculator.calculate_intended_signal_to_user_equipment(user_equipment,
+                                                                                       links_to_user_equipment)
+        interfering_signal = SignalCalculator.calculate_interfering_signal_at_user_equipment(user_equipment,
+                                                                                             links_to_user_equipment)
         return intended_signal, interfering_signal
 
     def _schedule_resource_blocks_for_base_stations(self):
@@ -58,7 +60,8 @@ class CapacityCalculator:
 
         for user_equipment in scheduled_users:
             user_equipment.receive_resource_block()
-            bits_transmitted_per_user_equipment = (user_equipment.current_capacity_in_bits_per_second * self._slot_duration_in_seconds)
+            bits_transmitted_per_user_equipment = (
+                        user_equipment.current_capacity_in_bits_per_second * self._slot_duration_in_seconds)
             bits_transmitted_in_resource_block += bits_transmitted_per_user_equipment
 
             transmission_detail = f"UE ({user_equipment.x},{user_equipment.y}), Bits transmitted = {bits_transmitted_per_user_equipment}"
@@ -72,13 +75,15 @@ class CapacityCalculator:
         self._update_all_user_equipment_reception_capacity()
         return self._calculate_bits_transmitted_in_downlink_resource_block(scheduled_users, current_slot)
 
-    def _calculate_downlink_round_robin_scheduling_slot_transmitted_bits(self,current_slot):
+    def _calculate_downlink_round_robin_scheduling_slot_transmitted_bits(self, current_slot):
 
         bits_transmitted_this_slot = 0
         all_base_stations_schedule = self._schedule_resource_blocks_for_base_stations()
 
         for resource_block in range(self._resource_blocks_per_slot):
-            bits_transmitted_in_resource_block = self._calculate_resource_block_transmission(all_base_stations_schedule, resource_block, current_slot)
+            bits_transmitted_in_resource_block = self._calculate_resource_block_transmission(all_base_stations_schedule,
+                                                                                             resource_block,
+                                                                                             current_slot)
             bits_transmitted_this_slot += bits_transmitted_in_resource_block
 
         self._bits_transmitted_this_slot_list.append(bits_transmitted_this_slot)
@@ -88,7 +93,8 @@ class CapacityCalculator:
         self._total_bits_transmitted = 0
 
         for current_slot in range(1, self._number_of_slots + 1):
-            bits_transmitted_this_slot = self._calculate_downlink_round_robin_scheduling_slot_transmitted_bits(current_slot)
+            bits_transmitted_this_slot = self._calculate_downlink_round_robin_scheduling_slot_transmitted_bits(
+                current_slot)
             self._total_bits_transmitted += bits_transmitted_this_slot
 
     def calculate_downlink_round_robin_aggregate_throughput_over_number_of_slots(self):
