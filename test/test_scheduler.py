@@ -3,8 +3,8 @@ import os
 import unittest
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from src.userequipment import UserEquipment
-from src.schedule import Schedule
+from transceiver.user_equipment.user_equipment import UserEquipment
+from scheduler.base.schedule import Schedule
 
 class TestSchedule(unittest.TestCase):
 

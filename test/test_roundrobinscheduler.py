@@ -4,8 +4,8 @@ import unittest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from src.roundrobinscheduler import RoundRobinScheduler
-from src.userequipment import UserEquipment
+from scheduler.round_robin_scheduler import RoundRobinScheduler
+from transceiver.user_equipment.user_equipment import UserEquipment
 
 
 class TestRoundRobinScheduler(unittest.TestCase):

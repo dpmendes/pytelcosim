@@ -1,6 +1,6 @@
 import unittest
-from src.basestation import BaseStation
-from src.userequipment import UserEquipment
+from transceiver.base_station import BaseStation
+from transceiver.user_equipment.user_equipment import UserEquipment
 
 class TestBaseStation(unittest.TestCase):
 

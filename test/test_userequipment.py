@@ -3,7 +3,7 @@ import os
 import unittest
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from src.userequipment import UserEquipment
+from transceiver.user_equipment.user_equipment import UserEquipment
 
 class TestUserEquipment(unittest.TestCase):
 
