@@ -15,7 +15,7 @@ def main():
 
     monitor = Monitor(system, "log", True)
 
-    # // Monitor actions.
+    #// Monitor actions.
     monitor.log_base_stations()
     monitor.log_user_equipments()
     monitor.log_connected_ues()

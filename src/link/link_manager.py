@@ -1,6 +1,7 @@
+from transceiver.base_station.base_station import BaseStation
+from transceiver.user_equipment.user_equipment import UserEquipment
 from link.base_station_to_user_equipment_link import BaseStationToUserEquipmentLink
 from link.user_equipment_to_base_station_link import UserEquipmentToBaseStationLink
-
 
 class LinkManager:
     def __init__(self, base_stations, user_equipments, channel):
@@ -45,17 +46,17 @@ class LinkManager:
         self._user_equipment_to_base_station_links = []
         for bs in self._base_stations:
             for ue in self._user_equipments:
-                link = self.create_link(UserEquipmentToBaseStationLink, ue, bs, self._channel)
+                link = self.create_link(UserEquipmentToBaseStationLink, ue, bs, self._channel) #!
                 self._user_equipment_to_base_station_links.append(link)
             self.inform_uplink_links(bs)
 
     def find_links_to_user_equipment(self, user_equipment, only_active=True):
         return [link for link in self._base_station_to_user_equipment_links
-                if (not only_active or link.active_in_the_current_slot) and link.destination_node == user_equipment]
+                if (not only_active or link._active_in_the_current_slot) and link.destination_node == user_equipment]
 
     def find_links_from_base_station(self, base_station, only_active=True):
         return [link for link in self._base_station_to_user_equipment_links
-                if (not only_active or link.active_in_the_current_slot) and link.source_node == base_station]
+                if (not only_active or link._active_in_the_current_slot) and link.source_node == base_station]
 
     def inform_downlink_links(self, base_station):
         links_from_base_station = self.find_links_from_base_station(base_station, only_active=False)
@@ -63,7 +64,7 @@ class LinkManager:
 
     def find_links_to_base_station(self, base_station, only_active=True):
         return [link for link in self._user_equipment_to_base_station_links
-                if (not only_active or link.active_in_the_current_slot) and link.destination_node == base_station]
+                if (not only_active or link._active_in_the_current_slot) and link.destination_node == base_station] #
 
     def inform_uplink_links(self, base_station):
         links_to_base_station = self.find_links_to_base_station(base_station, only_active=False)
@@ -73,9 +74,19 @@ class LinkManager:
         for user_equipment in self._user_equipments:
             links_to_user_equipment = self.find_links_to_user_equipment(user_equipment)
             greatest_gain_link = self.get_highest_gain_link_from_list(links_to_user_equipment)
-            user_equipment.connected_base_station = greatest_gain_link.destination_node
-            base_station = greatest_gain_link.source_node
-            base_station.connected_user_equipment = user_equipment
+
+            if isinstance(greatest_gain_link.source_node, BaseStation):
+                base_station = greatest_gain_link.source_node
+                user_equipment.connected_base_station = base_station
+            else:
+                raise ValueError(f"Greatest gain link source node is not instance of BaseStation")
+
+            if isinstance(greatest_gain_link.destination_node, UserEquipment):
+                user_equipment = greatest_gain_link.destination_node
+            else:
+                raise ValueError(f"Greatest gain link destination node is not instance of UserEquipment")
+
+            base_station.add_connected_user_equipment(user_equipment)
 
     @property
     def base_station_to_user_equipment_links(self):

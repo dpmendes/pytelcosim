@@ -10,7 +10,7 @@ class Link:
         self._destination_node = destination_node
         self._capacity = None
         self._gain = None
-        self.active_in_the_current_slot = True
+        self._active_in_the_current_slot = True
         self.channel = channel
 
     def calculate_distance(self):
@@ -44,10 +44,10 @@ class Link:
             self._capacity = W * (math.log2(1 + snr))
 
     def deactivate_link(self):
-        self.active_in_the_current_slot = False
+        self._active_in_the_current_slot = False
 
     def activate_link(self):
-        self.active_in_the_current_slot = True
+        self._active_in_the_current_slot = True
 
     @property
     def source_node(self):
