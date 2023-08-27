@@ -1,3 +1,4 @@
+from scheduler.proportional_fair.proportional_fair_scheduler import ProportionalFairScheduler
 from scheduler.round_robin.round_robin_scheduler import RoundRobinScheduler
 from transceiver.base.element import Element
 
@@ -97,5 +98,8 @@ class BaseStation(Element):
     def initialize_round_robin_scheduler(self):
         self._scheduler = RoundRobinScheduler(self.number_of_resource_blocks_per_slot)
 
+    def initialize_proportional_fair_scheduler(self, ewma_time_constant, starvation_threshold):
+        self._scheduler = ProportionalFairScheduler(self.number_of_resource_blocks_per_slot, ewma_time_constant, starvation_threshold)
+
     def __str__(self) -> str:
-        return f"BaseStation: ID={self._unique_id}, Location=({self._x:.2f},{self._y:.2f}), Frequency={self._frequency:.2f}"
+        return f"BaseStation: ID={self._unique_id}, Location=({self._x:.2f},{self._y:.2f})"

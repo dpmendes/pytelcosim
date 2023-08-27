@@ -4,7 +4,7 @@ from transceiver.user_equipment.user_equipment_manager import UserEquipmentManag
 from transmission_calc.signal_calculator import SignalCalculator
 
 
-class RoundRobinCapacityCalculator:
+class ProportionalFairCapacityCalculator:
 
     def __init__(self,
                  bs_manager: BaseStationManager,
@@ -75,7 +75,7 @@ class RoundRobinCapacityCalculator:
         self._update_all_user_equipment_reception_capacity()
         return self._calculate_bits_transmitted_in_downlink_resource_block(scheduled_users, current_slot)
 
-    def _calculate_downlink_round_robin_scheduling_slot_transmitted_bits(self, current_slot):
+    def _calculate_downlink_proportional_fair_scheduling_slot_transmitted_bits(self, current_slot):
 
         bits_transmitted_this_slot = 0
         all_base_stations_schedule = self._schedule_resource_blocks_for_base_stations()
@@ -93,11 +93,11 @@ class RoundRobinCapacityCalculator:
         self._total_bits_transmitted = 0
 
         for current_slot in range(1, self._number_of_slots + 1):
-            bits_transmitted_this_slot = self._calculate_downlink_round_robin_scheduling_slot_transmitted_bits(
+            bits_transmitted_this_slot = self._calculate_downlink_proportional_fair_scheduling_slot_transmitted_bits(
                 current_slot)
             self._total_bits_transmitted += bits_transmitted_this_slot
 
-    def calculate_downlink_round_robin_aggregate_throughput_over_number_of_slots(self):
+    def calculate_downlink_proportional_fair_aggregate_throughput_over_number_of_slots(self):
         self._calculate_slots_transmission()
         aggregate_throughput = (self._total_bits_transmitted / (self._number_of_slots * self._slot_duration_in_seconds))
         self._aggregate_throughput = aggregate_throughput
