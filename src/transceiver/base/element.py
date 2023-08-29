@@ -200,3 +200,8 @@ class Element:
         BW = self._bandwidth
         noise_power = k * T * BW
         return noise_power
+
+    def __eq__(self, other):
+        if isinstance(other, Element):
+            return self.unique_id == other.unique_id
+        return False

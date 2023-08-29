@@ -1,6 +1,6 @@
 from channel.free_space_channel import FreeSpaceChannel
 from link.link_manager import LinkManager
-from scheduler.round_robin.round_robin_capacity_calculator import CapacityCalculator
+from scheduler.round_robin.round_robin_capacity_calculator import RoundRobinCapacityCalculator
 from transceiver.base_station.base_station_manager import BaseStationManager
 from transceiver.user_equipment.user_equipment_manager import UserEquipmentManager
 
@@ -72,7 +72,7 @@ class System:
 
         self.configure_basics()
 
-        self._capacity = CapacityCalculator(self._base_station_manager,
+        self._capacity = RoundRobinCapacityCalculator(self._base_station_manager,
                                             self._user_equipment_manager,
                                             self._link_manager,
                                             self._number_of_slots,

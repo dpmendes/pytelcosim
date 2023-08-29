@@ -4,12 +4,10 @@ from system.monitor.element_plotter import ElementPlotter
 from system.monitor.logger import Logger
 from system.system import System
 
-
 class Monitor(ElementPlotter):
     """
     This class is responsible for monitoring system entities including base stations and user equipment.
     """
-
     def __init__(self, system: System, log_name: str, print_to_console: bool = False):
         self._base_stations = system.base_stations
         self._user_equipments = system.user_equipments
@@ -25,9 +23,10 @@ class Monitor(ElementPlotter):
 
     def create_log_directory(self, log_name, log_directory='.'):
         """Function to create a log directory if it doesn't exist and return the log file path."""
-        log_directory = os.path.join(log_directory, 'execution logs')
+        log_directory = os.path.join(log_directory, 'logs')
         os.makedirs(log_directory, exist_ok=True)
         return os.path.join(log_directory, f'{log_name}.txt')
+
 
     def _print_to_console(self, string):
         if self._print_to_console_flag:
@@ -76,7 +75,7 @@ class Monitor(ElementPlotter):
                 self._system_logger.critical("Base station object is None")
                 raise ValueError("Base station object is None")
 
-            connected_ues = base_station.connected_user_equipment
+            connected_ues = base_station.connected_user_equipments
             if not connected_ues:
                 self._system_logger.error(f"No connected UEs found for Base Station: {bs_counter}")
                 continue
@@ -113,7 +112,7 @@ class Monitor(ElementPlotter):
             user_equipment = link.destination_node
             base_station = link.source_node
             xu, yu = user_equipment.x, user_equipment.y
-            xb, yb = base_station.x, base_station.y
+            xb, yb = base_station.x , base_station.y
             gain = link.gain
             log_string = f"Link Number {link_counter}: From BS ({xb},{yb}) to UE ({xu},{yu}), Gain = {gain:e}"
             self._system_logger.info(log_string)

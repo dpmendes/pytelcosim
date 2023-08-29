@@ -1,3 +1,4 @@
+from scheduler.proportional_fair.proportional_fair_scheduler import ProportionalFairScheduler
 from scheduler.round_robin.round_robin_scheduler import RoundRobinScheduler
 from transceiver.base.element import Element
 
@@ -14,11 +15,10 @@ class BaseStation(Element):
         self._user_equipment_times_scheduled = []
 
     @property
-    def connected_user_equipment(self):
+    def connected_user_equipments(self):
         return self._connected_user_equipment
 
-    @connected_user_equipment.setter
-    def connected_user_equipment(self, user_equipment):
+    def add_connected_user_equipment(self, user_equipment):
         if user_equipment not in self._connected_user_equipment:
             self._connected_user_equipment.append(user_equipment)
 
@@ -75,15 +75,12 @@ class BaseStation(Element):
         self._number_of_resource_blocks_per_slot = number_of_resource_blocks_per_slot
 
     def initialize_user_equipment_times_scheduled_counters(self):
-        number_of_connected_user_equipment = len(
-            self._connected_user_equipment)
-        self._user_equipment_times_scheduled = [
-                                                   0] * number_of_connected_user_equipment
+        number_of_connected_user_equipment = len(self._connected_user_equipment)
+        self._user_equipment_times_scheduled = [0] * number_of_connected_user_equipment
 
     def inform_connected_user_equipment_to_scheduler(self):
         base_station_scheduler = self._scheduler
-        base_station_scheduler.update_user_equipment_to_be_scheduled_list(
-            self._connected_user_equipment)
+        base_station_scheduler.update_user_equipment_to_be_scheduled_list(self._connected_user_equipment)
         base_station_scheduler.reset_resource_blocks_served()
 
     def request_next_schedule_to_scheduler(self):
@@ -101,5 +98,8 @@ class BaseStation(Element):
     def initialize_round_robin_scheduler(self):
         self._scheduler = RoundRobinScheduler(self.number_of_resource_blocks_per_slot)
 
+    def initialize_proportional_fair_scheduler(self, ewma_time_constant, starvation_threshold):
+        self._scheduler = ProportionalFairScheduler(self.number_of_resource_blocks_per_slot, ewma_time_constant, starvation_threshold)
+
     def __str__(self) -> str:
-        return f"BaseStation: ID={self._unique_id}, Location=({self._x:.2f},{self._y:.2f}), Frequency={self._frequency:.2f}"
+        return f"BaseStation: ID={self._unique_id}, Location=({self._x:.2f},{self._y:.2f})"

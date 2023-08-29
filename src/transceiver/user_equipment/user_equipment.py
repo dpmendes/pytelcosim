@@ -44,3 +44,6 @@ class UserEquipment(Element):
     def is_dummy(self):
         """Checks if the user equipment is a dummy equipment, i.e., whether its x and y coordinates are both less than 0."""
         return self.x < 0 and self.y < 0
+
+    def __str__(self) -> str:
+        return f"UserEquipment: ID={self._unique_id}, Location=({self._x:.2f},{self._y:.2f})"
