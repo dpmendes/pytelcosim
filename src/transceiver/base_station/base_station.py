@@ -95,11 +95,13 @@ class BaseStation(Element):
         scheduler = self._scheduler
         self._user_equipment_times_scheduled = scheduler.get_resource_blocks_served_per_user_equipment_list()
 
+    #//
     def initialize_round_robin_scheduler(self):
         self._scheduler = RoundRobinScheduler(self.number_of_resource_blocks_per_slot)
 
-    def initialize_proportional_fair_scheduler(self, ewma_time_constant, starvation_threshold):
+    def initialize_proportional_fair_scheduler(self, ewma_time_constant=20, starvation_threshold=5):
         self._scheduler = ProportionalFairScheduler(self.number_of_resource_blocks_per_slot, ewma_time_constant, starvation_threshold)
+    #//
 
     def __str__(self) -> str:
         return f"BaseStation: ID={self._unique_id}, Location=({self._x:.2f},{self._y:.2f})"

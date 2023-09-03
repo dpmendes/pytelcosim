@@ -189,10 +189,6 @@ class Element:
         capacity = BW * np.log2(1 + SINR)
         self._current_capacity_in_bits_per_second = capacity
 
-    def get_current_capacity_in_bits_per_second(self):
-        """Return the current capacity in bits per second."""
-        return self._current_capacity_in_bits_per_second
-
     def calculate_noise_power(self):
         """Calculate the noise power based on the Boltzmann constant, temperature, and bandwidth."""
         k = self.BOLTZMANN_CONSTANT

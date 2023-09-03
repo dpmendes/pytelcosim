@@ -9,11 +9,16 @@ class Schedule:
             self._users_in_resource_blocks.append(user_equipment)
 
     def get_user_in_resource_block(self, resource_block):
+        # return self._users_in_resource_blocks[resource_block]
+        # if 0 <= resource_block < len(self._users_in_resource_blocks):
+        #     return self._users_in_resource_blocks[resource_block]
+        # else:
+        #     raise IndexError(
+        #         f"Resource block index {resource_block} is out of range")
         if 0 <= resource_block < len(self._users_in_resource_blocks):
             return self._users_in_resource_blocks[resource_block]
         else:
-            raise IndexError(
-                f"Resource block index {resource_block} is out of range")
+            return None  # Return an empty value or placeholder
 
     @property
     def base_station(self):
