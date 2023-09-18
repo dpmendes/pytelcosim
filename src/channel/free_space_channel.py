@@ -1,5 +1,4 @@
 import math
-
 import numpy as np
 
 from channel.base.channel import Channel
@@ -23,5 +22,4 @@ class FreeSpaceChannel(Channel):
             gain = np.inf
         else:
             gain = (Gt * Gr * (lambda_ ** 2)) / ((4 * math.pi * d) ** 2)
-
         return gain

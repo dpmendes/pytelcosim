@@ -21,7 +21,7 @@ def main():
     monitor.log_connected_ues()
     monitor.log_all_downlink_links()
     monitor.log_capacity()
-    # monitor.plot_elements()
+    monitor.plot_elements()
 
     end_time = time.time()
     end_datetime = datetime.datetime.fromtimestamp(end_time)

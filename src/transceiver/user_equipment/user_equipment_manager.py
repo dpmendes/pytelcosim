@@ -11,19 +11,18 @@ class UserEquipmentManager:
         if not self.find_user_equipment(user_equipment):
             self._user_equipments.append(user_equipment)
 
-    def create_user_equipments(self, mode='FIXED', fixed_x=None, fixed_y=None, number_of_ues=None,
-                               default_frequency=None, unique_id=None):
-        user_equipment_creator = UserEquipmentCreator(
-            fixed_x, fixed_y)
+    def create_user_equipments(self, mode='FIXED', fixed_x=None, fixed_y=None, number_of_ues=None, frequency=None, bandwidth=None, transmisson_power=None, unique_id=None):
+        user_equipment_creator = UserEquipmentCreator()
 
         for _ in range(number_of_ues):
             if mode == 'FIXED':
                 if fixed_x is None or fixed_y is None:
-                    raise ValueError("Upper x and y bounds must be provided for 'FIXED' mode.")
-                user_equipment = user_equipment_creator.create_fixed_user_equipment(
-                    fixed_x, fixed_y, default_frequency, unique_id)
+                    raise ValueError("x and y coordinates must be provided for 'FIXED' mode.")
+                user_equipment = user_equipment_creator.create_fixed_user_equipment(fixed_x, fixed_y, frequency, bandwidth, transmisson_power, unique_id)
             elif mode == 'RANDOM':
-                user_equipment = user_equipment_creator.create_random_user_equipment(default_frequency, unique_id)
+                if fixed_x is None or fixed_y is None:
+                    raise ValueError("Upper x and y bounds must be provided for 'RANDOM' mode.")
+                user_equipment = user_equipment_creator.create_random_user_equipment(fixed_x, fixed_y, frequency, bandwidth, transmisson_power, unique_id)
             else:
                 raise ValueError(f"Invalid mode '{mode}'. Must be 'FIXED' or 'RANDOM'.")
 

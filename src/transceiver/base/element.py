@@ -8,7 +8,7 @@ class Element:
 
     BOLTZMANN_CONSTANT = 1.380649e-23
 
-    def __init__(self, x, y, frequency=None, bandwidth=None, transmisson_power=None, unique_id=None):
+    def __init__(self, x, y, frequency, bandwidth, transmisson_power, unique_id=None):
         """
         Initialize an Element object.
 
@@ -22,18 +22,15 @@ class Element:
 
         self._x = x
         self._y = y
-        # self._bandwidth = bandwidth
-        self._bandwidth = 180e3
+        self._bandwidth = bandwidth
         self._current_capacity_in_bits_per_second = 0
         self._current_signal_to_interference_plus_noise_ratio = 0
         self._frequency = frequency
-        self._number_of_resource_blocks = 0
         self._number_of_resource_blocks_received = 0
         self._receiver_temperature_in_kelvins = 290
         self._total_bits_received = 0
         self._total_bits_transmitted = 0
-        # self._transmisson_power = transmisson_power
-        self._transmisson_power = 40
+        self._transmisson_power = transmisson_power
         self._slot_duration_in_seconds = 0.5e-3
         self._unique_id = unique_id if unique_id is not None else uuid.uuid4()
 
@@ -86,14 +83,6 @@ class Element:
     @transmisson_power.setter
     def transmisson_power(self, value):
         self._transmisson_power = value
-
-    @property
-    def number_of_resource_blocks(self):
-        return self._number_of_resource_blocks
-
-    @number_of_resource_blocks.setter
-    def number_of_resource_blocks(self, value):
-        self._number_of_resource_blocks = value
 
     @property
     def current_signal_to_interference_plus_noise_ratio(self):

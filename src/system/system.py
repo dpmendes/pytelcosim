@@ -1,5 +1,6 @@
 from channel.free_space_channel import FreeSpaceChannel
 from link.link_manager import LinkManager
+from properties.properties import settings
 from scheduler.round_robin.round_robin_capacity_calculator import RoundRobinCapacityCalculator
 from scheduler.proportional_fair.proportional_fair_scheduler_calculator import ProportionalFairCapacityCalculator
 from transceiver.base_station.base_station_manager import BaseStationManager
@@ -9,16 +10,19 @@ from transceiver.user_equipment.user_equipment_manager import UserEquipmentManag
 class System:
 
     def __init__(self):
+
         self._base_stations = []
         self._user_equipments = []
         self._channel = None
         self._results_file_handle = None
-        self._bandwidth = 180e3
-        self._frequency = 2600e6
-        self._slot_duration_in_seconds = 0.5e-3
-        self._number_of_slots = 10
-        self._resource_blocks_per_slot = 3
-        self._tx_power = 40
+        self._bandwidth = settings['bandwidth']
+        self._frequency = settings['frequency']
+        self._slot_duration_in_seconds = settings['slot_duration_in_seconds']
+        self._number_of_slots = settings['number_of_slots']
+        self._resource_blocks_per_slot = settings['resource_blocks_per_slot']
+        self._tx_power = settings['tx_power']
+        self._ewma_time_constant = settings['ewma_time_constant']
+        self._starvation_threshold = settings['starvation_threshold']
         self._throughput = 0
         self._base_station_manager = BaseStationManager(
             self._slot_duration_in_seconds, self._resource_blocks_per_slot)
@@ -59,19 +63,17 @@ class System:
         self._link_manager.user_equipments = self._user_equipment_manager.user_equipments
         self._link_manager.update_links()
         self._link_manager.associate_all_user_equipment()
+        self._base_station_manager.initialize_base_station_associated_user_equipment_scheduled_counters()
 
     def simulate_scenario_1(self):
-        self._base_station_manager.create_base_station('FIXED', 10, 20)
-        # self._base_station_manager.create_base_station('FIXED', 50, 20)
 
-        self._user_equipment_manager.create_user_equipments('FIXED', 0, 0, 1)
-        self._user_equipment_manager.create_user_equipments('FIXED', 20, 0, 1)
-        self._user_equipment_manager.create_user_equipments('FIXED', 40, 0, 1)
-        self._user_equipment_manager.create_user_equipments('FIXED', 60, 0, 1)
+        self._base_station_manager.create_base_station('FIXED', 10, 20, self._frequency, self._bandwidth, self._tx_power)
+        self._base_station_manager.create_base_station('FIXED', 50, 20, self._frequency, self._bandwidth, self._tx_power)
+
+        self._user_equipment_manager.create_user_equipments('RANDOM', 90, 50, 100, self._frequency, self._bandwidth, self._tx_power)
 
         self.configure_basics()
 
-        self._base_station_manager.initialize_base_station_associated_user_equipment_scheduled_counters()
         self._base_station_manager.initialize_base_station_round_robin_schedulers()
 
         self._capacity = RoundRobinCapacityCalculator(self._base_station_manager,
@@ -86,18 +88,17 @@ class System:
     #//
     def simulate_scenario_2(self):
 
-        self._base_station_manager.create_base_station('FIXED', 10, 20)
-        self._base_station_manager.create_base_station('FIXED', 50, 20)
+        self._base_station_manager.create_base_station('FIXED', 10, 20, self._frequency, self._bandwidth, self._tx_power)
+        self._base_station_manager.create_base_station('FIXED', 50, 20, self._frequency, self._bandwidth, self._tx_power)
 
-        self._user_equipment_manager.create_user_equipments('FIXED', 0, 0, 1)
-        self._user_equipment_manager.create_user_equipments('FIXED', 20, 0, 1)
-        self._user_equipment_manager.create_user_equipments('FIXED', 40, 0, 1)
-        self._user_equipment_manager.create_user_equipments('FIXED', 60, 0, 1)
+        self._user_equipment_manager.create_user_equipments('FIXED', 0, 0, 1, self._frequency, self._bandwidth, self._tx_power)
+        self._user_equipment_manager.create_user_equipments('FIXED', 20, 0, 1, self._frequency, self._bandwidth, self._tx_power)
+        self._user_equipment_manager.create_user_equipments('FIXED', 40, 0, 1, self._frequency, self._bandwidth, self._tx_power)
+        self._user_equipment_manager.create_user_equipments('FIXED', 60, 0, 1, self._frequency, self._bandwidth, self._tx_power)
 
         self.configure_basics()
 
-        self._base_station_manager.initialize_base_station_associated_user_equipment_scheduled_counters()
-        self._base_station_manager.initialize_base_station_proportional_fair_schedulers()
+        self._base_station_manager.initialize_base_station_proportional_fair_schedulers(self._ewma_time_constant, self._starvation_threshold)
 
         self._capacity = ProportionalFairCapacityCalculator(self._base_station_manager,
                                             self._user_equipment_manager,

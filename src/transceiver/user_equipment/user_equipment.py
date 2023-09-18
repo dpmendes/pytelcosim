@@ -4,8 +4,8 @@ from transceiver.base.element import Element
 class UserEquipment(Element):
     """Represents a user equipment in a network."""
 
-    def __init__(self, x, y, frequency=None, unique_id=None):
-        super().__init__(x, y, frequency, unique_id)
+    def __init__(self, x, y, frequency, bandwidth, transmisson_power, unique_id=None):
+        super().__init__(x, y, frequency, bandwidth, transmisson_power, unique_id)
         self._connected_base_station = None
         self._distance_from_bs = 0
 
