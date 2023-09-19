@@ -12,8 +12,7 @@ class Schedule:
         if 0 <= resource_block < len(self._users_in_resource_blocks):
             return self._users_in_resource_blocks[resource_block]
         else:
-            raise IndexError(
-                f"Resource block index {resource_block} is out of range")
+            return None
 
     @property
     def base_station(self):

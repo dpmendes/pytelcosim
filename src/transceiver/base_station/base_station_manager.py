@@ -14,13 +14,15 @@ class BaseStationManager:
         if not self.find_base_station(base_station):
             self._base_stations.append(base_station)
 
-    def create_base_station(self, mode='FIXED', x=None, y=None, default_frequency=None, unique_id=None):
+    def create_base_station(self, mode='FIXED', x=None, y=None, frequency=None, bandwidth=None, transmisson_power=None, unique_id=None):
         if mode == 'FIXED':
             if x is None or y is None:
                 raise ValueError("x and y coordinates must be provided for 'FIXED' mode.")
-            new_base_station = self._base_station_creator.create_fixed_base_station(x, y, default_frequency, unique_id)
+            new_base_station = self._base_station_creator.create_fixed_base_station(x, y, frequency, bandwidth, transmisson_power, unique_id)
         elif mode == 'RANDOM':
-            new_base_station = self._base_station_creator.create_base_station(default_frequency, unique_id)
+            if x is None or y is None:
+                raise ValueError("Upper x and y bounds must be provided for 'RANDOM' mode.")
+            new_base_station = self._base_station_creator.create_random_base_station(x, y, frequency, bandwidth, transmisson_power, unique_id)
         else:
             raise ValueError(f"Invalid mode '{mode}'. Must be 'FIXED' or 'RANDOM'.")
 
@@ -38,6 +40,12 @@ class BaseStationManager:
         for base_station in self._base_stations:
             base_station.number_of_resource_blocks_per_slot = self._resource_blocks_per_slot
             base_station.initialize_round_robin_scheduler()
+            base_station.inform_connected_user_equipment_to_scheduler()
+
+    def initialize_base_station_proportional_fair_schedulers(self, ewma_time_constant, starvation_threshold):
+        for base_station in self._base_stations:
+            base_station.number_of_resource_blocks_per_slot = self._resource_blocks_per_slot
+            base_station.initialize_proportional_fair_scheduler(ewma_time_constant, starvation_threshold)
             base_station.inform_connected_user_equipment_to_scheduler()
 
     def set_all_base_stations_transmit_power_in_watts(self, transmit_power: float):

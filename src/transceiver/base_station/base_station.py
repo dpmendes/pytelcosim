@@ -5,8 +5,8 @@ from transceiver.base.element import Element
 
 class BaseStation(Element):
 
-    def __init__(self, x, y, frequency=None, unique_id=None):
-        super().__init__(x, y, frequency, unique_id)
+    def __init__(self, x, y, frequency, bandwidth, transmisson_power, unique_id=None):
+        super().__init__(x, y, frequency, bandwidth, transmisson_power, unique_id)
         self._number_of_resource_blocks_per_slot = 0
         self._scheduler = None
         self._connected_user_equipment = []
@@ -98,7 +98,7 @@ class BaseStation(Element):
     def initialize_round_robin_scheduler(self):
         self._scheduler = RoundRobinScheduler(self.number_of_resource_blocks_per_slot)
 
-    def initialize_proportional_fair_scheduler(self, ewma_time_constant, starvation_threshold):
+    def initialize_proportional_fair_scheduler(self, ewma_time_constant=20, starvation_threshold=5):
         self._scheduler = ProportionalFairScheduler(self.number_of_resource_blocks_per_slot, ewma_time_constant, starvation_threshold)
 
     def __str__(self) -> str:

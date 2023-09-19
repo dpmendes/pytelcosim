@@ -38,8 +38,7 @@ class ProportionalFairCapacityCalculator:
             all_base_stations_schedule.append(slot_schedule)
         return all_base_stations_schedule
 
-    @staticmethod
-    def _get_scheduled_users_from_all_schedules(all_base_stations_schedule, resource_block):
+    def _get_scheduled_users_from_all_schedules(self, all_base_stations_schedule, resource_block):
         return [bs_schedule.get_user_in_resource_block(resource_block) for bs_schedule in all_base_stations_schedule]
 
     def _update_all_user_equipment_rx_signal_to_interference_plus_noise_ratio(self):
@@ -93,8 +92,7 @@ class ProportionalFairCapacityCalculator:
         self._total_bits_transmitted = 0
 
         for current_slot in range(1, self._number_of_slots + 1):
-            bits_transmitted_this_slot = self._calculate_downlink_proportional_fair_scheduling_slot_transmitted_bits(
-                current_slot)
+            bits_transmitted_this_slot = self._calculate_downlink_proportional_fair_scheduling_slot_transmitted_bits(current_slot)
             self._total_bits_transmitted += bits_transmitted_this_slot
 
     def calculate_downlink_proportional_fair_aggregate_throughput_over_number_of_slots(self):
