@@ -64,7 +64,7 @@ class RoundRobinCapacityCalculator:
                         user_equipment.current_capacity_in_bits_per_second * self._slot_duration_in_seconds)
             bits_transmitted_in_resource_block += bits_transmitted_per_user_equipment
 
-            transmission_detail = f"UE ({user_equipment.x},{user_equipment.y}), Bits transmitted = {bits_transmitted_per_user_equipment}"
+            transmission_detail = f"UE ({user_equipment.x:.2f},{user_equipment.y:.2f}), Bits transmitted = {bits_transmitted_per_user_equipment}"
             self._bits_transmitted_in_resource_block_dict[current_slot].append(transmission_detail)
 
         return bits_transmitted_in_resource_block
@@ -97,7 +97,7 @@ class RoundRobinCapacityCalculator:
                 current_slot)
             self._total_bits_transmitted += bits_transmitted_this_slot
 
-    def calculate_downlink_round_robin_aggregate_throughput_over_number_of_slots(self):
+    def calculate_downlink_aggregate_throughput_over_number_of_slots(self):
         self._calculate_slots_transmission()
         aggregate_throughput = (self._total_bits_transmitted / (self._number_of_slots * self._slot_duration_in_seconds))
         self._aggregate_throughput = aggregate_throughput
