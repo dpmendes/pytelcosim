@@ -95,7 +95,7 @@ class ProportionalFairCapacityCalculator:
             bits_transmitted_this_slot = self._calculate_downlink_proportional_fair_scheduling_slot_transmitted_bits(current_slot)
             self._total_bits_transmitted += bits_transmitted_this_slot
 
-    def calculate_downlink_proportional_fair_aggregate_throughput_over_number_of_slots(self):
+    def calculate_downlink_aggregate_throughput_over_number_of_slots(self):
         self._calculate_slots_transmission()
         aggregate_throughput = (self._total_bits_transmitted / (self._number_of_slots * self._slot_duration_in_seconds))
         self._aggregate_throughput = aggregate_throughput

@@ -42,10 +42,10 @@ class BaseStationManager:
             base_station.initialize_round_robin_scheduler()
             base_station.inform_connected_user_equipment_to_scheduler()
 
-    def initialize_base_station_proportional_fair_schedulers(self, ewma_time_constant, starvation_threshold):
+    def initialize_base_station_proportional_fair_schedulers(self, ewma_time_constant, starvation_threshold, starvation_flag=False):
         for base_station in self._base_stations:
             base_station.number_of_resource_blocks_per_slot = self._resource_blocks_per_slot
-            base_station.initialize_proportional_fair_scheduler(ewma_time_constant, starvation_threshold)
+            base_station.initialize_proportional_fair_scheduler(ewma_time_constant, starvation_threshold,starvation_flag)
             base_station.inform_connected_user_equipment_to_scheduler()
 
     def set_all_base_stations_transmit_power_in_watts(self, transmit_power: float):
