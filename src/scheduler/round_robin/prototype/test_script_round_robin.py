@@ -3,12 +3,12 @@ import numpy as np
 import time
 
 # Constants:
-NUMBER_OF_SLOTS = 10
+NUMBER_OF_SLOTS = 5
 SLOT_DURATION = 0.5e-3
 RESOURCE_BLOCKS = 3
 NUM_USERS = 4
-MIN_RATE = 10.0e3
-MAX_RATE = 100.0e3
+MIN_CAPACITY = 10.0e3
+MAX_CAPACITY = 100.0e3
 
 start_time = time.time()
 start_datetime = datetime.fromtimestamp(start_time)
@@ -25,11 +25,17 @@ aggregate_throughput = 0.0
 # Initialize the current user
 current_user = 0
 
+# Generate random link rates between MIN_CAPACITY and MAX_CAPACITY for NUM_USERS:
+seed_value = int(current_timestamp)  # Incorporate slot into the seed for unique rates per slot
+np.random.seed(seed_value)
+R = np.random.uniform(MIN_CAPACITY, MAX_CAPACITY, NUM_USERS)
+
+
 for slot in range(NUMBER_OF_SLOTS):
-    # Generate random link rates between MIN_RATE and MAX_RATE for NUM_USERS:
-    seed_value = int(current_timestamp + slot)  # Incorporate slot into the seed for unique rates per slot
-    np.random.seed(seed_value)
-    R = np.random.uniform(MIN_RATE, MAX_RATE, NUM_USERS)
+    # Generate random link rates between MIN_CAPACITY and MAX_CAPACITY for NUM_USERS:
+    # seed_value = int(current_timestamp + slot)  # Incorporate slot into the seed for unique rates per slot
+    # np.random.seed(seed_value)
+    # R = np.random.uniform(MIN_CAPACITY, MAX_CAPACITY, NUM_USERS)
 
     print(f"User capacities for slot {slot}:")
     for i, rate in enumerate(R, 1):
