@@ -64,6 +64,7 @@ for slot in range(NUMBER_OF_SLOTS):
 
     for resource_block in range(RESOURCE_BLOCKS):
 
+
         # Calculate the user with the highest normalized rate
         norm_rates = R / (T + SMALL_CONSTANT)
 
@@ -107,6 +108,7 @@ for slot in range(NUMBER_OF_SLOTS):
     total_bits_per_slot[slot] = total_bits_transmitted
     aggregate_throughput += total_bits_transmitted / SLOT_DURATION
 
+    print(f"Total bits transmitted in slot {slot+1}: {total_bits_transmitted:.2f} bits")
     print(f"Total bits transmitted in slot {slot+1}: {total_bits_transmitted:.2f} bits")
     print("")
 
