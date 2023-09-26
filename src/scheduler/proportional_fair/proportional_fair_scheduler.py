@@ -13,7 +13,7 @@ class ProportionalFairScheduler(Scheduler):
         self._starvation_flag = starvation_flag
         self._num_users = 0
         self._T = np.array([])
-        self.slots_since_last_scheduled = np.array([]) #
+        self._slots_since_last_scheduled = np.array([])
 
     def get_resource_blocks_served_per_user_equipment_list(self):
         return self.resource_blocks_served_per_user_equipment_list
@@ -32,7 +32,7 @@ class ProportionalFairScheduler(Scheduler):
         self._num_users = len(self.user_equipment_to_be_scheduled_list)
         self.resource_blocks_served_per_user_equipment_list = [0] * self._num_users
         self._T = np.array(new_T)
-        self.slots_since_last_scheduled = np.zeros(self._num_users)
+        self._slots_since_last_scheduled = np.zeros(self._num_users)
 
     def schedule_next_slot(self):
         R = np.array([ue.current_capacity_in_bits_per_second for ue in self.user_equipment_to_be_scheduled_list])
@@ -44,11 +44,14 @@ class ProportionalFairScheduler(Scheduler):
                 norm_rates[user] = -1
 
             if self._starvation_flag:
+                # Check for starvation:
                 max_slots_since_last_scheduled = np.max(
-                    self.slots_since_last_scheduled)
+                    self._slots_since_last_scheduled)
                 if max_slots_since_last_scheduled >= self._starvation_threshold:
-                    starving_users = np.argwhere(self.slots_since_last_scheduled == max_slots_since_last_scheduled).flatten()
-                    user = starving_users[np.argmax(norm_rates[starving_users])]
+                    starving_users = np.argwhere(
+                        self._slots_since_last_scheduled == max_slots_since_last_scheduled).flatten()
+                    user = starving_users[np.argmax(
+                        norm_rates[starving_users])]
                 else:
                     user = np.argmax(norm_rates)
             else:
@@ -58,21 +61,19 @@ class ProportionalFairScheduler(Scheduler):
             users_already_scheduled.add(user)
 
             # Update averages:
-            self._T[user] = (0.9 * self._T[user]) + (0.1 * R[user])
+            self._T = (1 - (1 / self._ewma_time_constant)) * self._T
+            self._T[user] += (1 / self._ewma_time_constant) * R[user]
 
             # Update slots since last scheduled:
-            # if self._starvation_flag:
-            #     self.slots_since_last_scheduled += 1
-            #     self.slots_since_last_scheduled[user] = 0
-
-            self.slots_since_last_scheduled += 1
-            self.slots_since_last_scheduled[user] = 0
+            self._slots_since_last_scheduled += 1
+            self._slots_since_last_scheduled[user] = 0
 
             user_equipment = self.user_equipment_to_be_scheduled_list[user]
             slotSchedule.add_user_to_resource_block(user_equipment)
 
             # Update resource blocks served:
             self.resource_blocks_served_per_user_equipment_list[user] += 1
+
             # Review.
             # self._T = np.zeros_like(self._T)
 
@@ -80,6 +81,3 @@ class ProportionalFairScheduler(Scheduler):
 
     def reset_resource_blocks_served(self):
         self.resource_blocks_served_per_user_equipment_list = [0] * self._num_users
-
-    def remove_user_equipment_from_current_schedule(self, userEquipment):
-        pass

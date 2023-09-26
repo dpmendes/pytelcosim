@@ -25,8 +25,8 @@ class ProportionalFairCapacityCalculator:
         self._aggregate_throughput = 0
 
     def _calculate_signals(self, user_equipment, links_to_user_equipment):
-        intended_signal = SignalCalculator.calculate_intended_signal_to_user_equipment(user_equipment,links_to_user_equipment)
-        interfering_signal = SignalCalculator.calculate_interfering_signal_at_user_equipment(user_equipment,links_to_user_equipment)
+        intended_signal = SignalCalculator.calculate_intended_signal_to_user_equipment(user_equipment, links_to_user_equipment)
+        interfering_signal = SignalCalculator.calculate_interfering_signal_at_user_equipment(user_equipment, links_to_user_equipment)
         return intended_signal, interfering_signal
 
     def _schedule_resource_blocks_for_base_stations(self):
@@ -71,15 +71,12 @@ class ProportionalFairCapacityCalculator:
         return self._calculate_bits_transmitted_in_downlink_resource_block(scheduled_users, current_slot)
 
     def _calculate_downlink_proportional_fair_scheduling_slot_transmitted_bits(self, current_slot):
-
         # Step 1: Update the reception capacities for all user equipment
         self._update_all_user_equipment_rx_signal_to_interference_plus_noise_ratio()
         self._update_all_user_equipment_reception_capacity()
-
         # Step 2: Schedule resource blocks for base stations
         bits_transmitted_this_slot = 0
         all_base_stations_schedule = self._schedule_resource_blocks_for_base_stations()
-
         # Step 3: Continue with the existing logic
         for resource_block in range(self._resource_blocks_per_slot):
             bits_transmitted_in_resource_block = self._calculate_resource_block_transmission(all_base_stations_schedule,

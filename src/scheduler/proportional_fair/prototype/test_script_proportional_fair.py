@@ -7,7 +7,7 @@ import time
 INITIAL_THROUGHPUT = 1e-9
 SMALL_CONSTANT = 1e-9
 
-NUMBER_OF_SLOTS = 10
+NUMBER_OF_SLOTS = 5
 SLOT_DURATION = 0.5e-3
 RESOURCE_BLOCKS = 3
 NUM_USERS = 4
@@ -18,7 +18,7 @@ STARVATION_THRESHOLD = 3
 
 DEBUG_FLAG = False # Enable this flag for debugging; it will print internal variables for inspection
 DYNAMIC_RATES = False # This flag controls whether the rates for users change dynamically during the simulation
-RESET_T_FLAG = True
+RESET_T_FLAG = False
 STARVATION_FLAG = False
 
 start_time = time.time()
@@ -89,7 +89,10 @@ for slot in range(NUMBER_OF_SLOTS):
         # Update averages:
         # T = (1 - (1 / EWMA_TIME_CONSTANT)) * T
         # T[user] += (1 / EWMA_TIME_CONSTANT) * scheduled_rate
-        T[user] = (0.9 * T[user]) + (0.1 * scheduled_rate)
+
+        T[user] = (1 - (1 / EWMA_TIME_CONSTANT)) * T[user] + (1 / EWMA_TIME_CONSTANT) * scheduled_rate
+
+        # T[user] = (0.9 * T[user]) + (0.1 * scheduled_rate)
 
         if STARVATION_FLAG:
             # Update slots since last scheduled
