@@ -125,8 +125,11 @@ class System:
         self._user_equipment_manager.update_all_user_equipment_slot_duration(self._slot_duration_in_seconds)
 
         self._link_manager = LinkManager(self._base_station_manager.base_stations, self._user_equipment_manager.user_equipments, self._channel)
+
+        self._link_manager = LinkManager(self._base_station_manager.base_stations, self._user_equipment_manager.user_equipments, self._channel)
         self._link_manager.update_links()
         self._link_manager.associate_all_user_equipment()
+
 
         self._base_station_manager.initialize_base_station_associated_user_equipment_scheduled_counters()
 

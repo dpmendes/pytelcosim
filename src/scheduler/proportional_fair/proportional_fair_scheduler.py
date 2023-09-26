@@ -60,13 +60,10 @@ class ProportionalFairScheduler(Scheduler):
             # Update averages:
             self._T[user] = (0.9 * self._T[user]) + (0.1 * R[user])
 
-            # Update slots since last scheduled:
-            # if self._starvation_flag:
-            #     self.slots_since_last_scheduled += 1
-            #     self.slots_since_last_scheduled[user] = 0
-
-            self.slots_since_last_scheduled += 1
-            self.slots_since_last_scheduled[user] = 0
+            #Update slots since last scheduled:
+            if self._starvation_flag:
+                self.slots_since_last_scheduled += 1
+                self.slots_since_last_scheduled[user] = 0
 
             user_equipment = self.user_equipment_to_be_scheduled_list[user]
             slotSchedule.add_user_to_resource_block(user_equipment)
@@ -74,7 +71,7 @@ class ProportionalFairScheduler(Scheduler):
             # Update resource blocks served:
             self.resource_blocks_served_per_user_equipment_list[user] += 1
             # Review.
-            # self._T = np.zeros_like(self._T)
+            self._T = np.zeros_like(self._T)
 
         return slotSchedule
 
@@ -83,3 +80,4 @@ class ProportionalFairScheduler(Scheduler):
 
     def remove_user_equipment_from_current_schedule(self, userEquipment):
         pass
+

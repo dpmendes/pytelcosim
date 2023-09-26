@@ -52,6 +52,7 @@ for slot in range(NUMBER_OF_SLOTS):
         R = np.random.uniform(MIN_CAPACITY, MAX_CAPACITY, NUM_USERS)
 
     print(f"User capacities for slot {slot+1}:")
+    print(f"User capacities for slot {slot+1}:")
     for i, rate in enumerate(R, 1):
         print(f"User {i}: {rate:.2f}")
 
@@ -63,6 +64,7 @@ for slot in range(NUMBER_OF_SLOTS):
         print(f"Current Throughput Averages: {T}")
 
     for resource_block in range(RESOURCE_BLOCKS):
+
 
         # Calculate the user with the highest normalized rate
         norm_rates = R / (T + SMALL_CONSTANT)
@@ -104,6 +106,7 @@ for slot in range(NUMBER_OF_SLOTS):
     total_bits_per_slot[slot] = total_bits_transmitted
     aggregate_throughput += total_bits_transmitted / SLOT_DURATION
 
+    print(f"Total bits transmitted in slot {slot+1}: {total_bits_transmitted:.2f} bits")
     print(f"Total bits transmitted in slot {slot+1}: {total_bits_transmitted:.2f} bits")
     print("")
 
