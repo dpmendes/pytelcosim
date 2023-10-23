@@ -75,7 +75,7 @@ class ProportionalFairScheduler(Scheduler):
             self.resource_blocks_served_per_user_equipment_list[user] += 1
 
             # Review.
-            self._T = np.zeros_like(self._T)
+            # self._T = np.zeros_like(self._T)
 
         return slotSchedule
 
