@@ -138,3 +138,14 @@ class Monitor(ElementPlotter):
         self._system_logger.info(log_string)
         self._print(log_string)
         self._log_separator()
+
+    def log_scenario_data(self):
+
+        self.log_scenario_name()
+        self.log_general_settings()
+        self.log_base_stations()
+        self.log_user_equipments()
+        self.log_connected_ues()
+        self.log_all_downlink_links()
+        self.log_capacity()
+        self.log_aggregate_throughput()
