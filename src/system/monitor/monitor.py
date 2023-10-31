@@ -16,6 +16,7 @@ class Monitor(ElementPlotter):
         self._user_equipment_to_base_station_links = system.user_equipment_to_base_station_links
         self._capacity = system.capacity
         self._aggregate_throughput = system.throughput
+        self._delays = system.delays
         self._log_name = log_name
         self._log_file_name = self.create_log_directory_and_get_file_path(log_name)
         self._system_logger = Logger(self._log_name, self._log_file_name)
@@ -123,12 +124,29 @@ class Monitor(ElementPlotter):
             self._print(log_string)
         self._log_separator()
 
-    def log_capacity(self):
+    def log_transmission_detail(self):
         for slot, transmission_details in self._capacity.bits_transmitted_in_resource_block.items():
             for detail in transmission_details:
                 self._system_logger.info(detail)
                 self._print(detail)
             log_string = f"End of Slot {slot}"
+            self._system_logger.info(log_string)
+            self._print(log_string)
+        self._log_separator()
+
+    def log_user_equipments_delays(self):
+        for i, user_equipment in enumerate(self._user_equipments, start=1):
+            # Validation for transmission_delay
+            if self._delays [user_equipment.unique_id] is None or not isinstance(user_equipment.transmission_delay, (int, float)):
+                delay_info = "Unavailable"
+                warning_message = f"Warning: Transmission delay data for UE Number: {i}, {user_equipment.unique_id} is unavailable or invalid."
+                self._system_logger.warning(warning_message)
+                self._print(warning_message)
+            else:
+                delay_info = f"{self._delays [user_equipment.unique_id]:.5f}"
+                # delay_info = f"{user_equipment.transmission_delay:.6f}"
+
+            log_string = f"UE Number: {i}, {user_equipment.unique_id}, Avg Delay: {delay_info}"
             self._system_logger.info(log_string)
             self._print(log_string)
         self._log_separator()
@@ -147,5 +165,6 @@ class Monitor(ElementPlotter):
         self.log_user_equipments()
         self.log_connected_ues()
         self.log_all_downlink_links()
-        self.log_capacity()
+        self.log_transmission_detail()
+        self.log_user_equipments_delays()
         self.log_aggregate_throughput()
