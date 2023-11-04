@@ -1,10 +1,12 @@
 from channel.free_space_channel import FreeSpaceChannel
 from link.link_manager import LinkManager
 from properties.properties import settings
-from scheduler.round_robin.round_robin_capacity_calculator import RoundRobinCapacityCalculator
-from scheduler.proportional_fair.proportional_fair_scheduler_calculator import ProportionalFairCapacityCalculator
+from scheduler.base.scheduler_capacity_calculator import SchedulerCapacityCalculator
+# from scheduler.round_robin.round_robin_capacity_calculator import RoundRobinCapacityCalculator
+# from scheduler.proportional_fair.proportional_fair_scheduler_calculator import ProportionalFairCapacityCalculator
 from transceiver.base_station.base_station_manager import BaseStationManager
 from transceiver.user_equipment.user_equipment_manager import UserEquipmentManager
+from transmission_calc.delay_calculator import DelayCalculator
 
 
 class System:
@@ -25,7 +27,9 @@ class System:
         self._tx_power = self._scenario_config['tx_power']
         self._ewma_time_constant = self._scenario_config['ewma_time_constant']
         self._starvation_threshold = self._scenario_config['starvation_threshold']
-        self._aggregate_throughput= 0
+
+        self._aggregate_throughput = 0
+        self._ue_delays = []
         self._base_station_manager = BaseStationManager(
             self._slot_duration_in_seconds, self._resource_blocks_per_slot)
         self._user_equipment_manager = UserEquipmentManager(
@@ -55,6 +59,10 @@ class System:
     @property
     def throughput(self):
         return self._aggregate_throughput
+
+    @property
+    def delays(self):
+        return self._ue_delays
 
     @property
     def scenario_name(self):
@@ -94,42 +102,34 @@ class System:
     def _initialize_capacity_calculator(self, calculator_type):
         if calculator_type == "RoundRobinCapacityCalculator":
             self._base_station_manager.initialize_base_station_round_robin_schedulers()
-            return RoundRobinCapacityCalculator(
-                self._base_station_manager,
-                self._user_equipment_manager,
-                self._link_manager,
-                self._number_of_slots,
-                self._resource_blocks_per_slot,
-                self._slot_duration_in_seconds
-            )
         elif calculator_type == "ProportionalFairCapacityCalculator":
             self._base_station_manager.initialize_base_station_proportional_fair_schedulers(
                 self._ewma_time_constant, self._starvation_threshold)
-            return ProportionalFairCapacityCalculator(
-                self._base_station_manager,
-                self._user_equipment_manager,
-                self._link_manager,
-                self._number_of_slots,
-                self._resource_blocks_per_slot,
-                self._slot_duration_in_seconds
-            )
         else:
             raise ValueError(
                 f"Unknown capacity calculator type '{calculator_type}'")
+
+        return SchedulerCapacityCalculator(
+            self._base_station_manager,
+            self._user_equipment_manager,
+            self._link_manager,
+            self._number_of_slots,
+            self._resource_blocks_per_slot,
+            self._slot_duration_in_seconds
+        )
 
     def _configure_basics(self):
 
         self._channel = FreeSpaceChannel(self._frequency)
 
-        self._base_station_manager.set_all_base_stations_transmit_power_in_watts(self._tx_power)
-        self._user_equipment_manager.update_all_user_equipment_slot_duration(self._slot_duration_in_seconds)
-
-        self._link_manager = LinkManager(self._base_station_manager.base_stations, self._user_equipment_manager.user_equipments, self._channel)
-
-        self._link_manager = LinkManager(self._base_station_manager.base_stations, self._user_equipment_manager.user_equipments, self._channel)
+        self._base_station_manager.set_all_base_stations_transmit_power_in_watts(
+            self._tx_power)
+        self._user_equipment_manager.update_all_user_equipment_slot_duration(
+            self._slot_duration_in_seconds)
+        self._link_manager = LinkManager(
+            self._base_station_manager.base_stations, self._user_equipment_manager.user_equipments, self._channel)
         self._link_manager.update_links()
         self._link_manager.associate_all_user_equipment()
-
 
         self._base_station_manager.initialize_base_station_associated_user_equipment_scheduled_counters()
 
@@ -144,5 +144,7 @@ class System:
         self._setup_user_equipments(self._scenario_config["user_equipments"])
         self._configure_basics()
 
-        self._capacity = self._initialize_capacity_calculator(self._scenario_config["capacity_calculator"])
-        self._aggregate_throughput= self._capacity.calculate_downlink_aggregate_throughput_over_number_of_slots()
+        self._capacity = self._initialize_capacity_calculator(
+            self._scenario_config["capacity_calculator"])
+        self._aggregate_throughput = self._capacity.calculate_downlink_aggregate_throughput_over_number_of_slots()
+        self._ue_delays = DelayCalculator.calculate_delays(self._user_equipment_manager.user_equipments)

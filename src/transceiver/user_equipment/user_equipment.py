@@ -8,6 +8,8 @@ class UserEquipment(Element):
         super().__init__(x, y, frequency, bandwidth, transmisson_power, unique_id)
         self._connected_base_station = None
         self._distance_from_bs = 0
+        self._transmission_slots = []
+        self._avg_delay = 0
 
     @property
     def connected_base_station(self):
@@ -31,9 +33,29 @@ class UserEquipment(Element):
     def distance_from_bs(self, distance: float):
         self._distance_from_bs = distance
 
-    def is_dummy(self):
-        """Checks if the user equipment is a dummy equipment, i.e., whether its x and y coordinates are both less than 0."""
-        return self.x < 0 and self.y < 0
+    @property
+    def transmission_delay(self):
+        return self._avg_delay
+
+    @transmission_delay.setter
+    def transmission_delay(self, delay):
+        self._avg_delay = delay
+
+    def record_transmission_slot(self, slot_number):
+        """Records the slot number in which the user equipment transmitted something.
+
+        Args:
+        slot_number (int): The number of the slot to record.
+        """
+        self._transmission_slots.append(slot_number)
+
+    def get_transmission_slots(self):
+        """Returns a list of slots in which the user equipment transmitted.
+
+        Returns:
+        list[int]: List of slots.
+        """
+        return self._transmission_slots
 
     def __str__(self) -> str:
         return f"UserEquipment: ID={self._unique_id}, Location=({self._x:.2f},{self._y:.2f})"
